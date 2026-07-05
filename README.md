@@ -16,9 +16,9 @@ This repository contains the group assignment for the Database Connection Assign
 
 ## Proposed technology stack
 
-- DBMS: To be confirmed, likely SQLite or MySQL
+- DBMS: To be confirmed, likely...
 - Programming language: Python
-- Interface: To be confirmed, likely Streamlit
+- Interface: To be confirmed, likely...
 - Source control: GitHub
 - Report: Microsoft Word using the University of Liverpool template
 - Video: MP4 screen recording
