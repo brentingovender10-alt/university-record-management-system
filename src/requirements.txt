@@ -1,0 +1,3 @@
+# Front-end dependencies for the University Record Management System interface
+streamlit>=1.36
+pandas>=2.0
