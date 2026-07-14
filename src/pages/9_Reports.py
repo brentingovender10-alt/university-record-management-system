@@ -37,7 +37,7 @@ REPORTS = {
         "icon": "📊", "desc": "Summary of staff, courses, and research per department",
         "sql": """
             SELECT d.DepartmentName AS "Department", d.Faculty AS "Faculty",
-                   (SELECT COUNT(*) FROM NON_ACADEMIC_STAFF s WHERE s.DepartmentID=d.DepartmentID) AS "Staff",
+                   (SELECT COUNT(*) FROM NON_ACADEMIC_STAFF_UI s WHERE s.DepartmentID=d.DepartmentID) AS "Staff",
                    (SELECT COUNT(*) FROM COURSE c WHERE c.DepartmentID=d.DepartmentID) AS "Courses",
                    (SELECT COUNT(*) FROM RESEARCH_PROJECT r WHERE r.DepartmentID=d.DepartmentID) AS "Projects"
             FROM DEPARTMENT d ORDER BY d.DepartmentName
@@ -67,7 +67,7 @@ REPORTS = {
         "sql": """
             SELECT st.StaffID AS "Staff ID", st.FullName AS "Full Name", d.DepartmentName AS "Department",
                    st.EmploymentType AS "Employment Type", st.ContractType AS "Contract Type"
-            FROM NON_ACADEMIC_STAFF st LEFT JOIN DEPARTMENT d ON d.DepartmentID = st.DepartmentID
+            FROM NON_ACADEMIC_STAFF_UI st LEFT JOIN DEPARTMENT d ON d.DepartmentID = st.DepartmentID
             ORDER BY d.DepartmentName, st.StaffID
         """,
     },

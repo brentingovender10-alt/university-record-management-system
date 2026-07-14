@@ -133,7 +133,7 @@ def show_list() -> None:
         df = df[df["DepartmentName"] == dept]
     if area != "All":
         expert_ids = database.run_query(
-            "SELECT le.LecturerID FROM LECTURER_EXPERTISE le "
+            "SELECT le.LecturerID FROM LECTURER_EXPERTISE_UI le "
             "JOIN RESEARCH_AREA ra ON ra.ResearchAreaID = le.ResearchAreaID WHERE ra.AreaName = ?",
             (area,),
         )["LecturerID"].tolist()

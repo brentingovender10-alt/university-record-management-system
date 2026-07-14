@@ -94,7 +94,7 @@ QUERIES = [
         "sql": """
             SELECT l.LecturerID AS "Lecturer ID", l.FullName AS "Full Name",
                    d.DepartmentName AS "Department"
-            FROM LECTURER_EXPERTISE le
+            FROM LECTURER_EXPERTISE_UI le
             JOIN LECTURER l ON l.LecturerID = le.LecturerID
             LEFT JOIN DEPARTMENT d ON d.DepartmentID = l.DepartmentID
             WHERE le.ResearchAreaID = ?
@@ -229,7 +229,7 @@ QUERIES = [
             SELECT st.StaffID AS "Staff ID", st.FullName AS "Full Name",
                    st.JobTitle AS "Job Title", d.DepartmentName AS "Department",
                    st.ContractType AS "Contract Type"
-            FROM NON_ACADEMIC_STAFF st
+            FROM NON_ACADEMIC_STAFF_UI st
             LEFT JOIN DEPARTMENT d ON d.DepartmentID = st.DepartmentID
             WHERE st.EmploymentType = ?
             ORDER BY st.StaffID

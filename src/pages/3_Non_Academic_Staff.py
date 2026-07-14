@@ -19,7 +19,7 @@ emp = f2.selectbox("Employment Type", ["All", "Full-Time", "Part-Time"])
 df = database.run_query(
     """
     SELECT st.StaffID, st.FullName, st.JobTitle, d.DepartmentName, st.EmploymentType, st.ContractType
-    FROM NON_ACADEMIC_STAFF st
+    FROM NON_ACADEMIC_STAFF_UI st
     LEFT JOIN DEPARTMENT d ON d.DepartmentID = st.DepartmentID
     ORDER BY st.StaffID
     """

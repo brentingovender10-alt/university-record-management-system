@@ -15,7 +15,7 @@ search = st.text_input("Search", placeholder="Search by department name…", lab
 df = database.run_query(
     """
     SELECT d.DepartmentID, d.DepartmentName, d.Faculty,
-           (SELECT COUNT(*) FROM NON_ACADEMIC_STAFF s WHERE s.DepartmentID = d.DepartmentID) AS Staff,
+           (SELECT COUNT(*) FROM NON_ACADEMIC_STAFF_UI s WHERE s.DepartmentID = d.DepartmentID) AS Staff,
            (SELECT COUNT(*) FROM COURSE c WHERE c.DepartmentID = d.DepartmentID) AS Courses,
            (SELECT GROUP_CONCAT(ra.AreaName, ', ') FROM DEPARTMENT_RESEARCH_AREA dra
                 JOIN RESEARCH_AREA ra ON ra.ResearchAreaID = dra.ResearchAreaID
@@ -42,7 +42,7 @@ for _, r in df.iterrows():
             (int(r["DepartmentID"]),),
         )["CourseName"].tolist()
         staff = database.run_query(
-            "SELECT FullName, JobTitle FROM NON_ACADEMIC_STAFF WHERE DepartmentID = ? LIMIT 8",
+            "SELECT FullName, JobTitle FROM NON_ACADEMIC_STAFF_UI WHERE DepartmentID = ? LIMIT 8",
             (int(r["DepartmentID"]),),
         )
         c1.markdown("**Courses Offered**\n\n" + ("\n".join(f"- {c}" for c in courses) or "- None"))

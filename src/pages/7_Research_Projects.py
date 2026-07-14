@@ -44,7 +44,7 @@ def show_details(project_id: int) -> None:
             SELECT f.SourceName AS "Source",
                    (pf.Currency || format('%,d', pf.AmountAwarded)) AS "Amount",
                    f.SourceType AS "Type"
-            FROM PROJECT_FUNDING pf
+            FROM PROJECT_FUNDING_UI pf
             JOIN FUNDING_SOURCE f ON f.FundingSourceID = pf.FundingSourceID
             WHERE pf.ProjectID = ?
             """,
@@ -87,7 +87,7 @@ def show_list() -> None:
         """
         SELECT rp.ProjectID, rp.ProjectTitle, l.FullName AS PI, d.DepartmentName, rp.Status, rp.StartDate,
                (SELECT COUNT(*) FROM RESEARCH_PROJECT_TEAM t WHERE t.ProjectID = rp.ProjectID) AS TeamSize,
-               (SELECT f.SourceName FROM PROJECT_FUNDING pf
+               (SELECT f.SourceName FROM PROJECT_FUNDING_UI pf
                     JOIN FUNDING_SOURCE f ON f.FundingSourceID = pf.FundingSourceID
                     WHERE pf.ProjectID = rp.ProjectID LIMIT 1) AS Funding
         FROM RESEARCH_PROJECT rp
