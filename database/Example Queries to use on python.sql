@@ -1,0 +1,138 @@
+-- ============================================================
+-- replace the named parameters with user input in python
+-- ============================================================
+
+-- 1. Find all students enrolled in a specific course taught by a particular lecturer.
+-- Parameters: :course_code, :lecturer_number
+-- SELECT DISTINCT s.student_number, s.first_name, s.last_name, c.course_code, c.course_name,
+--        l.first_name || ' ' || l.last_name AS lecturer_name
+-- FROM students s
+-- JOIN enrollments e ON e.student_id = s.student_id
+-- JOIN course_offerings co ON co.offering_id = e.offering_id
+-- JOIN courses c ON c.course_id = co.course_id
+-- JOIN teaching_assignments ta ON ta.offering_id = co.offering_id
+-- JOIN lecturers l ON l.lecturer_id = ta.lecturer_id
+-- WHERE c.course_code = :course_code
+--   AND l.lecturer_number = :lecturer_number
+--   AND e.enrollment_status IN ('Enrolled', 'Completed');
+
+-- 2. List all final-year students with an average grade above 70 percent.
+-- SELECT student_number, student_name, program_name, average_grade_percent
+-- FROM vw_student_average_grades
+-- WHERE year_of_study = duration_years
+--   AND average_grade_percent > 70
+-- ORDER BY average_grade_percent DESC;
+
+-- 3. Identify students who have not registered for any courses in the current semester.
+-- SELECT s.student_number, s.first_name, s.last_name, p.program_name
+-- FROM students s
+-- JOIN programs p ON p.program_id = s.program_id
+-- WHERE NOT EXISTS (
+--     SELECT 1
+--     FROM enrollments e
+--     JOIN course_offerings co ON co.offering_id = e.offering_id
+--     JOIN semesters sem ON sem.semester_id = co.semester_id
+--     WHERE e.student_id = s.student_id
+--       AND sem.is_current = 1
+--       AND e.enrollment_status IN ('Enrolled', 'Completed')
+-- );
+
+-- 4. Retrieve the contact information for the faculty advisor of a specific student.
+-- Parameter: :student_number
+-- SELECT s.student_number,
+--        s.first_name || ' ' || s.last_name AS student_name,
+--        l.first_name || ' ' || l.last_name AS advisor_name,
+--        l.email AS advisor_email,
+--        l.phone AS advisor_phone,
+--        d.department_name AS advisor_department
+-- FROM students s
+-- JOIN student_advisors sa ON sa.student_id = s.student_id
+-- JOIN lecturers l ON l.lecturer_id = sa.lecturer_id
+-- JOIN departments d ON d.department_id = l.department_id
+-- WHERE s.student_number = :student_number;
+
+-- 5. Search for lecturers with expertise in a particular research area.
+-- Parameter: :area_name
+-- SELECT l.lecturer_number,
+--        l.first_name || ' ' || l.last_name AS lecturer_name,
+--        d.department_name,
+--        ra.area_name,
+--        le.expertise_level
+-- FROM lecturers l
+-- JOIN departments d ON d.department_id = l.department_id
+-- JOIN lecturer_expertise le ON le.lecturer_id = l.lecturer_id
+-- JOIN research_areas ra ON ra.research_area_id = le.research_area_id
+-- WHERE ra.area_name LIKE '%' || :area_name || '%'
+-- ORDER BY le.expertise_level DESC, lecturer_name;
+
+-- 6. List all courses taught by lecturers in a specific department.
+-- Parameter: :department_name
+-- SELECT DISTINCT c.course_code, c.course_name, l.first_name || ' ' || l.last_name AS lecturer_name,
+--        sem.academic_year, sem.term
+-- FROM courses c
+-- JOIN course_offerings co ON co.course_id = c.course_id
+-- JOIN semesters sem ON sem.semester_id = co.semester_id
+-- JOIN teaching_assignments ta ON ta.offering_id = co.offering_id
+-- JOIN lecturers l ON l.lecturer_id = ta.lecturer_id
+-- JOIN departments d ON d.department_id = l.department_id
+-- WHERE d.department_name = :department_name
+-- ORDER BY c.course_code;
+
+-- 7. Identify lecturers who have supervised the most student research projects.
+-- SELECT l.lecturer_number,
+--        l.first_name || ' ' || l.last_name AS lecturer_name,
+--        COUNT(DISTINCT srs.project_id) AS supervised_project_count,
+--        COUNT(DISTINCT srs.student_id) AS supervised_student_count
+-- FROM lecturers l
+-- LEFT JOIN student_research_supervision srs ON srs.lecturer_id = l.lecturer_id
+-- GROUP BY l.lecturer_id, l.lecturer_number, lecturer_name
+-- ORDER BY supervised_project_count DESC, supervised_student_count DESC;
+
+-- 8. Generate a report on lecturer publications in the past year.
+-- For a fixed current date of 2026-07-07, past year means from 2025-07-07 to 2026-07-07.
+-- SELECT lecturer_number, lecturer_name, department_name, title, publication_type, venue, publication_date
+-- FROM vw_lecturer_publications
+-- WHERE publication_date BETWEEN '2025-07-07' AND '2026-07-07'
+-- ORDER BY publication_date DESC, lecturer_name;
+
+-- 9. Retrieve the names of students advised by a specific lecturer.
+-- Parameter: :lecturer_number
+-- SELECT l.lecturer_number,
+--        l.first_name || ' ' || l.last_name AS lecturer_name,
+--        s.student_number,
+--        s.first_name || ' ' || s.last_name AS student_name,
+--        p.program_name
+-- FROM lecturers l
+-- JOIN student_advisors sa ON sa.lecturer_id = l.lecturer_id
+-- JOIN students s ON s.student_id = sa.student_id
+-- JOIN programs p ON p.program_id = s.program_id
+-- WHERE l.lecturer_number = :lecturer_number
+-- ORDER BY student_name;
+
+-- 10. Find all staff members employed in a specific department.
+-- Parameter: :department_name
+-- SELECT ns.staff_number,
+--        ns.first_name || ' ' || ns.last_name AS staff_name,
+--        ns.job_title,
+--        ns.employment_type,
+--        ns.email,
+--        ns.phone
+-- FROM non_academic_staff ns
+-- JOIN departments d ON d.department_id = ns.department_id
+-- WHERE d.department_name = :department_name
+-- ORDER BY staff_name;
+
+-- 11. Identify employees who supervise student employees in a particular program.
+-- Parameter: :program_name
+-- SELECT DISTINCT ns.staff_number,
+--        ns.first_name || ' ' || ns.last_name AS supervisor_name,
+--        ns.job_title AS supervisor_job_title,
+--        p.program_name,
+--        COUNT(se.student_id) AS number_of_student_employees
+-- FROM non_academic_staff ns
+-- JOIN student_employment se ON se.supervisor_staff_id = ns.staff_id
+-- JOIN students s ON s.student_id = se.student_id
+-- JOIN programs p ON p.program_id = s.program_id
+-- WHERE p.program_name = :program_name
+-- GROUP BY ns.staff_id, ns.staff_number, supervisor_name, ns.job_title, p.program_name
+-- ORDER BY number_of_student_employees DESC;
