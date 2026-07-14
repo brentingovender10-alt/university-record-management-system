@@ -20,7 +20,18 @@ from __future__ import annotations
 from pathlib import Path
 
 import pandas as pd
-import streamlit as st
+try:
+    import streamlit as st
+except Exception:
+    st = None
+
+if st is not None and hasattr(st, "cache_resource"):
+    _cache_resource = st.cache_resource
+else:
+    def _cache_resource(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
 
 from . import demo_db
 
@@ -28,7 +39,7 @@ from . import demo_db
 _REAL_DB_PATH = Path(__file__).resolve().parents[2] / "database" / "university.db"
 
 
-@st.cache_resource(show_spinner=False)
+@_cache_resource(show_spinner=False)
 def get_connection():
     """Return a cached SQLite connection (real DB if present, else demo DB)."""
     if _REAL_DB_PATH.exists():
