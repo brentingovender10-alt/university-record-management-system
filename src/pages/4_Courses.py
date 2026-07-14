@@ -27,7 +27,7 @@ def show_details(course_code: str) -> None:
     top = st.columns([4, 1])
     top[0].title("Course Details")
     if top[1].button("← Back", use_container_width=True):
-        del st.session_state["course_code"]
+        st.session_state.pop("course_code", None)
         st.rerun()
 
     left, right = st.columns(2)

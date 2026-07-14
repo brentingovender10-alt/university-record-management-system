@@ -36,9 +36,11 @@ with left:
                 opts = database.run_query(p["options_sql"])
                 pairs = list(zip(opts["value"], opts["label"]))
                 if p.get("optional"):
-                    pairs = [(None, "All Departments")] + pairs
+                    opt_label = p.get("optional_label", "All")
+                    pairs = [(None, opt_label)] + pairs
+                labels = [label for _, label in pairs]
                 value_map = {label: val for val, label in pairs}
-                choice = st.selectbox(p["label"], list(value_map))
+                choice = st.selectbox(p["label"], labels)
                 values[p["key"]] = value_map[choice]
             else:  # static options list
                 choice = st.selectbox(p["label"], p["options"],

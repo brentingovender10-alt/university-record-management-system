@@ -24,7 +24,7 @@ def show_profile(lecturer_id: str) -> None:
     top = st.columns([4, 1])
     top[0].title("Lecturer Profile")
     if top[1].button("← Back", use_container_width=True):
-        del st.session_state["lecturer_id"]
+        st.session_state.pop("lecturer_id", None)
         st.rerun()
 
     left, right = st.columns(2)
