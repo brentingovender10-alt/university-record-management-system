@@ -1,0 +1,6 @@
+# Development and testing dependencies
+pytest>=7.0
+pytest-cov>=4.0
+pytest-mock>=3.10
+pandas>=2.0
+streamlit>=1.36
