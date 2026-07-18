@@ -509,6 +509,13 @@ _INSERTS = [
 ]
 
 
+_COMPATIBILITY_ALIASES = {
+    "NON_ACADEMIC_STAFF_UI": "NON_ACADEMIC_STAFF",
+    "LECTURER_EXPERTISE_UI": "LECTURER_EXPERTISE",
+    "PROJECT_FUNDING_UI": "PROJECT_FUNDING",
+}
+
+
 def build_in_memory() -> sqlite3.Connection:
     """Create and populate the in-memory demo database, returning the connection."""
     conn = sqlite3.connect(":memory:", check_same_thread=False)
@@ -520,5 +527,7 @@ def build_in_memory() -> sqlite3.Connection:
             continue
         placeholders = ", ".join(["?"] * len(rows[0]))
         cur.executemany(f"INSERT INTO {table} VALUES ({placeholders})", rows)
+    for alias, source in _COMPATIBILITY_ALIASES.items():
+        cur.execute(f"CREATE TEMP VIEW {alias} AS SELECT * FROM {source}")
     conn.commit()
     return conn
