@@ -321,9 +321,9 @@ class TestQueryEdgeCases:
         
         with patch('src.urms.database.get_connection', return_value=demo_connection):
             result = database.run_query(query["sql"], params)
+            check = database.run_query("SELECT COUNT(*) FROM STUDENT")
         
         # Should not execute injection, just find no results
         assert isinstance(result, pd.DataFrame)
         # STUDENT table should still exist
-        check = database.run_query("SELECT COUNT(*) FROM STUDENT")
         assert check.iloc[0, 0] == 12

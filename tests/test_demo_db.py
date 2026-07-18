@@ -74,6 +74,24 @@ class TestSchemaCreation:
         assert len(table_names) == 30  # Expected table count
         conn.close()
 
+    def test_compatibility_views_created(self):
+        """build_in_memory() exposes the UI compatibility views."""
+        conn = demo_db.build_in_memory()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT name FROM sqlite_temp_master
+            WHERE type='view'
+            ORDER BY name
+        """)
+        view_names = [row[0] for row in cursor.fetchall()]
+
+        assert "LECTURER_EXPERTISE_UI" in view_names
+        assert "NON_ACADEMIC_STAFF_UI" in view_names
+        assert "PROJECT_FUNDING_UI" in view_names
+
+        conn.close()
+
 
 class TestDataPopulation:
     """Tests for data population in demo database."""
