@@ -181,24 +181,6 @@ Ran 6 tests ... OK
 
 The tests check that the database file exists, the app can connect to it, and the main query functions execute against the backend schema.
 
-## Demonstration video checklist
-
-For the final video, demonstrate the following:
-
-1. Open the GitHub repository and briefly show the project structure.
-2. Run the Streamlit app from the command line.
-3. Show that the sidebar says `Connected to database/university.db`.
-4. Open the Dashboard page and explain the summary counts.
-5. Open Students, Lecturers, Courses, Departments, Programs and Research Projects.
-6. Open Query Builder and execute at least five queries.
-7. Show the SQL displayed for at least one selected query.
-8. Open Reports and generate at least one report preview.
-9. Briefly mention testing and the group’s use of GitHub.
-10. End by confirming that the system meets the assignment requirement: database, dummy data, Python interface, at least five executable queries, report, meeting minutes and video.
-
-## Submission reminder
-
-Each group member must submit an identical copy of the final assignment package. The final package should include the code, database, report, ERD, meeting minutes and demonstration video. The peer assessment form should be submitted separately through the dedicated peer assessment submission point, not with the main assignment.
 
 ## Notes
 
