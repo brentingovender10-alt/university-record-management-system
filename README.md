@@ -1,24 +1,29 @@
-# university-record-management-system
-Group B assignment database connection project for a university record management system.
+# University Record Management System
+
+Group B Database Connection Assignment project for a university record management system.
 
 ## Project overview
 
-This repository contains the group assignment for the Database Connection Assignment. The project requires the design and implementation of a university record management system, including a relational database, dummy data, a Python interface for querying the database, a written report, meeting minutes and a demonstration video.
+This repository contains the Group B end-of-module Database Connection Assignment. The project designs and implements a university record management system using a relational database, dummy data, a Python Streamlit interface, query functionality, testing evidence, meeting minutes, a written report and a short demonstration video.
+
+The system allows users to view university records relating to students, lecturers, non-academic staff, courses, departments, programmes and research projects. It also includes a Query Builder page that executes predefined SQL queries through Python and displays the results in the web interface.
 
 ## Group roles
 
 | Role | Name | Main responsibilities |
 |---|---|---|
-| Project Manager | Brentin Govender | Planning, GitHub coordination, meeting minutes, final submission checklist and report quality control |
-| Database Designer / Engineer | Dooshina Oolun | ERD, normalisation, schema, dummy data and database queries |
-| Software Engineer | Dramane Bako | Python interface, database connection and query execution |
-| Tester | To be confirmed/All 3 | Test plan, validation, screenshots and bug reporting |
+| Project Manager | Brentin Govender | GitHub coordination, progress tracking, report quality control, meeting minutes and final submission checklist |
+| Database Designer / Engineer | Dooshina Oolun | ERD, normalisation, database schema, dummy data and database design decisions |
+| Software Engineer | Dramane Bako | Python Streamlit interface, database connection, query execution and application pages |
+| Tester | All group members | Functional testing, query validation, screenshots, video checks and final review |
 
-## Proposed technology stack
+## Technology stack
 
-- DBMS: To be confirmed, likely...
+- DBMS: SQLite
+- Database file: `database/university.db`
 - Programming language: Python
-- Interface: To be confirmed, likely...
+- Interface: Streamlit
+- Data display: Pandas/DataFrame tables
 - Source control: GitHub
 - Report: Microsoft Word using the University of Liverpool template
 - Video: MP4 screen recording
@@ -26,52 +31,177 @@ This repository contains the group assignment for the Database Connection Assign
 ## Repository structure
 
 ```text
-src/                Python source code
-database/           SQL scripts, database file and ERD
-docs/               Report, screenshots and supporting documentation
-meeting_minutes/    Meeting minutes for group milestones
-tests/              Test plan, test results and validation evidence
-video/              Final demonstration video or video link/instructions
+src/                Python source code and Streamlit pages
+database/           SQLite database, SQL scripts and database assets
+docs/               Report, ERD, screenshots and supporting documentation
+meeting_minutes/    Group meeting minutes and milestone records
+tests/              Integration tests and validation evidence
+video/              Demo video script or final video file
 ```
+
+## Main features
+
+The current application includes:
+
+- Dashboard summary counts for students, lecturers, courses and departments.
+- Student listing and student profile access.
+- Lecturer listing and lecturer profile access.
+- Non-academic staff listing.
+- Course listing and course details.
+- Department summary page.
+- Programme summary and course requirements.
+- Research project listing and project details.
+- Query Builder with predefined SQL queries.
+- Reports page for management-style summaries.
+- CSV export option for query results.
+
+## Query Builder functionality
+
+The Query Builder demonstrates that the Python interface executes SQL queries against the SQLite database. The implemented queries include:
+
+1. Students by Department
+2. Students Enrolled in a Course
+3. Courses Taught by a Lecturer
+4. Lecturers in a Research Area
+5. Students by Year of Study
+6. Research Projects by Status
+7. High-Performing Students
+8. Course Enrolment Counts
+9. Publications Since a Date
+10. Staff by Employment Type
+
+These queries support the assignment requirement to allow users to execute at least five database queries through the Python code.
 
 ## Run the app
 
-The repository ships with the real backend database at
-`database/university.db`, so the app connects to it automatically — no database
-build step is required. Open **Windows PowerShell** and run the steps below.
+The repository includes the backend SQLite database at:
 
-**1. Go to the repository root**
+```text
+database/university.db
+```
+
+The app should therefore connect to the real database automatically. When the connection is successful, the sidebar displays:
+
+```text
+Connected to database/university.db
+```
+
+If this message appears, the app is using the real database rather than in-memory demo data.
+
+---
+
+## Mac instructions
+
+Open Terminal and move into the repository root folder.
+
+```bash
+cd ~/Downloads/university-record-management-system-main
+```
+
+If your repository is saved somewhere else, replace the path with the correct folder location.
+
+Create and activate a virtual environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Install the required packages:
+
+```bash
+python3 -m pip install -r src/requirements.txt
+```
+
+Start the Streamlit app:
+
+```bash
+python3 -m streamlit run src/Dashboard.py
+```
+
+The app should open in the browser. If it does not open automatically, copy the local URL shown in Terminal, usually:
+
+```text
+http://localhost:8501
+```
+
+---
+
+## Windows PowerShell instructions
+
+Open Windows PowerShell and move into the repository root folder.
 
 ```powershell
 cd C:\Users\<you>\university-record-management-system
 ```
 
-Replace the path with wherever you cloned the repository. All following
-commands are run from this folder.
+Replace the path with wherever the repository has been saved.
 
-**2. Install dependencies**
+Install the required packages:
 
 ```powershell
 py -m pip install -r src/requirements.txt
 ```
 
-**3. Start the app**
+Start the Streamlit app:
 
 ```powershell
 py -m streamlit run src/Dashboard.py
 ```
 
-The app opens in the browser. Because `database/university.db` is present, the
-front end reads from the real backend schema read-only, and the sidebar footer
-reads **"Connected to database/university.db"** (not "Demo data"). Use the
-sidebar to move between Students, Lecturers, Courses, Departments, Programs,
-Research Projects, the Query Builder and Reports.
+The app should open in the browser. If it does not open automatically, copy the local URL shown in PowerShell, usually:
 
-**4. (Optional) Prove the integration with the test suite**
+```text
+http://localhost:8501
+```
+
+---
+
+## Run the test suite
+
+To confirm that the Python query layer connects correctly to the SQLite database, run:
+
+### Mac
+
+```bash
+python3 -m unittest tests.test_database_integration -v
+```
+
+### Windows PowerShell
 
 ```powershell
 py -m unittest tests.test_database_integration -v
 ```
 
-This checks that every front-end query and relation name executes against the
-backend schema. Expect `Ran 6 tests ... OK`.
+Expected result:
+
+```text
+Ran 6 tests ... OK
+```
+
+The tests check that the database file exists, the app can connect to it, and the main query functions execute against the backend schema.
+
+## Demonstration video checklist
+
+For the final video, demonstrate the following:
+
+1. Open the GitHub repository and briefly show the project structure.
+2. Run the Streamlit app from the command line.
+3. Show that the sidebar says `Connected to database/university.db`.
+4. Open the Dashboard page and explain the summary counts.
+5. Open Students, Lecturers, Courses, Departments, Programs and Research Projects.
+6. Open Query Builder and execute at least five queries.
+7. Show the SQL displayed for at least one selected query.
+8. Open Reports and generate at least one report preview.
+9. Briefly mention testing and the group’s use of GitHub.
+10. End by confirming that the system meets the assignment requirement: database, dummy data, Python interface, at least five executable queries, report, meeting minutes and video.
+
+## Submission reminder
+
+Each group member must submit an identical copy of the final assignment package. The final package should include the code, database, report, ERD, meeting minutes and demonstration video. The peer assessment form should be submitted separately through the dedicated peer assessment submission point, not with the main assignment.
+
+## Notes
+
+- Do not delete `database/university.db`, because the app uses it as the live backend database.
+- If the sidebar says demo data is being used, check that `database/university.db` is still present.
+- Keep the final repository and submission files consistent across all group members.
