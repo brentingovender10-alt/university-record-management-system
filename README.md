@@ -24,6 +24,7 @@ The system allows users to view university records relating to students, lecture
 - Programming language: Python
 - Interface: Streamlit
 - Data display: Pandas/DataFrame tables
+- Testing: pytest, with automated runs through GitHub Actions
 - Source control: GitHub
 - Report: Microsoft Word using the University of Liverpool template
 - Video: MP4 screen recording
@@ -33,10 +34,12 @@ The system allows users to view university records relating to students, lecture
 ```text
 src/                Python source code and Streamlit pages
 database/           SQLite database, SQL scripts and database assets
-docs/               Report, ERD, screenshots and supporting documentation
+docs/               Written report and supporting documentation
 meeting_minutes/    Group meeting minutes and milestone records
-tests/              Integration tests and validation evidence
-video/              Demo video script or final video file
+tests/              Automated pytest suite and validation evidence
+video/              Demo video transcript and final video file
+requirements-dev.txt  Testing dependencies
+.github/workflows/  GitHub Actions workflow that runs the test suite
 ```
 
 ## Main features
@@ -159,27 +162,65 @@ http://localhost:8501
 
 ## Run the test suite
 
-To confirm that the Python query layer connects correctly to the SQLite database, run:
+The repository includes an automated pytest suite covering the database layer, the query functions, the demo database and the interface helpers.
+
+First install the testing dependencies:
 
 ### Mac
 
 ```bash
-python3 -m unittest tests.test_database_integration -v
+python3 -m pip install -r requirements-dev.txt
 ```
 
 ### Windows PowerShell
 
 ```powershell
-py -m unittest tests.test_database_integration -v
+py -m pip install -r requirements-dev.txt
+```
+
+Then run the full suite from the repository root:
+
+### Mac
+
+```bash
+python3 -m pytest tests -q
+```
+
+### Windows PowerShell
+
+```powershell
+py -m pytest tests -q
 ```
 
 Expected result:
 
 ```text
-Ran 6 tests ... OK
+83 passed, 91 subtests passed
 ```
 
-The tests check that the database file exists, the app can connect to it, and the main query functions execute against the backend schema.
+The tests must be run from the repository root, because they load the application code from the `src` folder using a relative path.
+
+### What the tests cover
+
+| Test file | Tests | Area covered |
+|---|---|---|
+| `test_core.py` | 5 | Demo database creation, query execution and parameter binding |
+| `test_database.py` | 21 | Connection handling and the database access layer |
+| `test_database_integration.py` | 6 | End-to-end checks against the backend schema |
+| `test_demo_db.py` | 23 | In-memory demo database build and fallback behaviour |
+| `test_imports.py` | 1 | All application modules import cleanly |
+| `test_queries.py` | 25 | Predefined query functions, including SQL injection safety |
+| `test_theme.py` | 2 | Interface formatting helpers |
+
+To run a single file, pass its path, for example:
+
+```bash
+python3 -m pytest tests/test_queries.py -v
+```
+
+### Continuous integration
+
+The workflow in `.github/workflows/tests.yml` runs the same test suite automatically on every push and pull request to `main`, so test results are visible on GitHub under the Actions tab.
 
 
 ## Notes
